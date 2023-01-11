@@ -38,7 +38,7 @@ OCG系列不多赘述。
 |真龙十二宫|OCG衍生|ALTER||
 # 禁卡表
 <div data-role="collapsible">
-<h1>2023.1</h1>
+<h3>2023.1</h3>
 <p>Forbidden<br>
 <ul>
 <li>林中鹿
