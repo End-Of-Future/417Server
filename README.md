@@ -55,6 +55,9 @@ OCG系列不多赘述。
 + 激流飞龙-裂变
 + 激流-后浪奔逐
 + 自律部队·支援部队
++ 反粒子龙
++ 中子龙
++ 夸克龙
 #### Limit
 + 虚空孔穴·格利扎
 + 四次元洞·布鲁顿
@@ -89,6 +92,8 @@ OCG系列不多赘述。
 + aoffghvlrbdddfqp3.Dispose()
 + class aoffghvlrbdddfqp3 : IDisposeable
 + aoffghvlrbdddfqp3()
++ 原子龙
++ 德拉科尼亚帝国
 #### Semi-Limit
 + 奇正相生
 + 奥西里斯的天空龙-神之盾
@@ -106,5 +111,6 @@ OCG系列不多赘述。
 + 自律行动·部队调遣
 + 镚壞-冋歔
 + 镚壞■笹堺
++ 通常融合
 
 </details>
