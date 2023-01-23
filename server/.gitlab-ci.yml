@@ -1,0 +1,125 @@
+stages:
+  - build
+  - build2
+  - deploy
+
+variables:
+  GIT_DEPTH: "1"
+
+.docker-op:
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+.docker-x86:
+  extends: .docker-op
+  tags:
+    - docker
+  variables:
+    ARCH: x86
+
+.docker-arm:
+  extends: .docker-op
+  tags:
+    - docker-arm
+  variables:
+    ARCH: arm
+
+.build_lite:
+  stage: build
+  script:
+    - docker build --pull --no-cache -f ./Dockerfile.lite -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$ARCH-lite .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$ARCH-lite
+
+build_lite_x86:
+  extends:
+    - .docker-x86
+    - .build_lite
+
+build_lite_arm:
+  extends:
+    - .docker-arm
+    - .build_lite
+
+.build_full:
+  stage: build2
+  script:
+    - docker build --build-arg BASE_IMAGE=$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$ARCH-lite --pull --no-cache -t
+      $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$ARCH-full .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$ARCH-full
+
+build_full_x86:
+  extends:
+    - .docker-x86
+    - .build_full
+  
+build_full_arm:
+  extends:
+    - .docker-arm
+    - .build_full
+
+.deploy_image:
+  stage: deploy
+  extends: .docker-x86
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-x86-$DEPLOY_TYPE
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-arm-$DEPLOY_TYPE
+    - docker manifest create $CI_REGISTRY_IMAGE:$DEPLOY_TAG $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-x86-$DEPLOY_TYPE $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-arm-$DEPLOY_TYPE
+    - docker manifest push $CI_REGISTRY_IMAGE:$DEPLOY_TAG
+
+deploy_lite:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: lite
+    DEPLOY_TAG: $CI_COMMIT_REF_SLUG-lite
+
+deploy_full:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: full
+    DEPLOY_TAG: $CI_COMMIT_REF_SLUG-full
+
+deploy_branch:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: full
+    DEPLOY_TAG: $CI_COMMIT_REF_SLUG
+
+deploy_latest_lite:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: lite
+    DEPLOY_TAG: lite
+  only:
+    - master
+
+deploy_latest_full:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: full
+    DEPLOY_TAG: full
+  only:
+    - master
+
+deploy_latest:
+  extends: .deploy_image
+  variables:
+    DEPLOY_TYPE: full
+    DEPLOY_TAG: latest
+  only:
+    - master
+
+upload_stuff_to_minio:
+  stage: deploy
+  tags:
+    - linux
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-x86-full
+  script:
+    - apt update ; apt -y install python3-pip
+    - pip3 install -U -i https://mirrors.aliyun.com/pypi/simple/ awscli
+    - cd /ygopro-server
+    - mkdir /dist
+    - tar zcfv /dist/ygopro-server.tar.gz ./*
+    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp
+      /dist/ygopro-server.tar.gz s3://mycard/srvpro/ygopro-server.tar.gz
+  only:
+    - master
