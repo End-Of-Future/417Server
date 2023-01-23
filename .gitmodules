@@ -1,0 +1,3 @@
+[submodule "server/ygopro/script"]
+	path = server/ygopro/script
+	url = https://github.com/End-Of-Future/417ServerScripts
