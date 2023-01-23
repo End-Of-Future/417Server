@@ -48,6 +48,7 @@ OCG系列不多赘述。
 |废墟|原创系列|-FCJNBZP||
 |M·A·L|原创系列|星空璀璨之地||
 # 禁卡表
+审核到 镚壞。
 <details>
     <summary>2023.1</summary>
 
