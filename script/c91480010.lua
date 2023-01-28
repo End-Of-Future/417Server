@@ -53,6 +53,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
     if tc then
         Duel.SpecialSummon(tc,SUMMON_TYPE_SPECIAL,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+        Duel.ConfirmCards(1-tp,tc)
     end
 end
 function cm.dfilter(c)

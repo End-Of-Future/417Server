@@ -35,6 +35,7 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
         local tc=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_DECK,0,1,1,nil)
         if tc then
             Duel.SendtoHand(tc,tp,REASON_EFFECT)
+            Duel.ConfirmCards(1-tp,tc)
         end
     end
 end
