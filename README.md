@@ -87,6 +87,7 @@ OCG系列不多赘述。
 <details>
     <summary>2023.1.26 UPD</summary>
 
+### 2023.1.26
 #### Forbidden
 + 林中鹿
 + 激流海灵龙
@@ -156,6 +157,7 @@ OCG系列不多赘述。
 <details>
     <summary>2023.1.30 UPD</summary>
 
+### 2023.1.30
 #### Forbidden
 + 林中鹿
 + 激流海灵龙
