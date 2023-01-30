@@ -58,11 +58,9 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 		return true
 	else return false end
 end
-function s.sprop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	c:SetMaterial(g)
-	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_LINK)
+	Duel.SendtoGrave(g,REASON_COST)
 	g:DeleteGroup()
 end
 function s.costfi(c)
