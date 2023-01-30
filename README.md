@@ -71,7 +71,7 @@ OCG系列不多赘述。
 </details>
 
 <details>
-    <summary>23.. UPD Add-list</summary>
+    <summary>23.1.30 UPD Add-list</summary>
 
 |系列名|系列类型|作者|称号|
 |:--|--|--|--|
