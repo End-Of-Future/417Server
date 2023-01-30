@@ -30,7 +30,7 @@
 + 23.1.28 23:55 作者柚果投稿了 小猫突击。
 + 23.1.28 23:55 作者柚果投稿了 走来走去。
 + 23.1.29 00:18 作者Marin.Blue投稿了 Blue。
-+ 23.1.20 13:35 作者-FCJNBZP投稿了 LVP5ver2.0。
++ 23.1.30 13:35 作者-FCJNBZP投稿了 LVP5ver2.0。
 
 </details>
 
@@ -154,7 +154,7 @@ OCG系列不多赘述。
 </details>
 
 <details>
-    <summary>2023.1.29 UPD</summary>
+    <summary>2023.1.30 UPD</summary>
 
 #### Forbidden
 + 林中鹿
