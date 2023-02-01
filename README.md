@@ -103,7 +103,6 @@ OCG系列不多赘述。
 
 
 # 禁卡表
-审核到 镚壞。
 <details>
     <summary>2023.1.26 UPD</summary>
 
