@@ -1,5 +1,5 @@
 # ignore
 /cache
 /.vs
-/Update-Server
-/Others/temp
+/Others/Modules.py
+/Others/__pycache__
