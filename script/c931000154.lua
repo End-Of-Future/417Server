@@ -13,20 +13,17 @@ end
 function c931000154.fi1(c)
 	return c:IsType(TYPE_NORMAL) and c:IsFaceup()
 end
-function c931000154.fi2(c)
-	return c:IsType(TYPE_EFFECT) and c:IsFaceup()
-end
 function c931000154.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c931000154.fi1,tp,LOCATION_MZONE,0,5,nil)
-		and not Duel.IsExistingMatchingCard(c931000154.fi2,tp,0,LOCATION_MZONE,1,nil)
 end
 function c931000154.tgfi(c)
 	return c:IsAbleToGrave() and c:IsOnField()
 end
 function c931000154.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c931000154.tgfi,tp,0,LOCATION_ONFIELD,1,nil) end
+	local g=Duel.GetMatchingGroupCount(c931000154.tgfi,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,0,1-tp,LOCATION_ONFIELD)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,g*500)
 end
 function c931000154.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
