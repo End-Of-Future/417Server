@@ -19,7 +19,7 @@
     "auto_death": false
   },
   "modules": {
-    "welcome": "417 YGOPro Server Ver=1.035.4",
+    "welcome": "417 YGOPro Server Ver=1.035.4 UPD=2.9",
     "update": "请更新你的客户端版本",
     "wait_update": "你的客户端版本高于服务器版本，请等待服务器更新",
     "stop": false,
