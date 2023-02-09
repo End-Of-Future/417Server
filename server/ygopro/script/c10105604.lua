@@ -1,0 +1,61 @@
+function c10105604.initial_effect(c)
+	--search
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(10105604,1))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_TO_GRAVE)
+	e1:SetCountLimit(1,10105604)
+	e1:SetTarget(c10105604.thtg)
+	e1:SetOperation(c10105604.thop)
+	c:RegisterEffect(e1)
+    	--cannot be target
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3b))
+	e2:SetValue(aux.tgoval)
+	c:RegisterEffect(e2)
+    	--atk up
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3b))
+	e3:SetValue(800)
+	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_UPDATE_DEFENSE)
+	c:RegisterEffect(e4)
+    	--Normal monster
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetCode(EFFECT_ADD_TYPE)
+	e5:SetRange(LOCATION_GRAVE)
+	e5:SetValue(TYPE_NORMAL)
+	c:RegisterEffect(e5)
+	local e6=e5:Clone()
+	e6:SetCode(EFFECT_REMOVE_TYPE)
+	e6:SetValue(TYPE_EFFECT)
+	c:RegisterEffect(e6)
+    end
+function c10105604.filter(c)
+	return c:IsSetCard(0x3b) and not c:IsCode(10105604) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function c10105604.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c10105604.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c10105604.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
