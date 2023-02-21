@@ -3,8 +3,9 @@
 服务器管理员为 -k/3 。腐竹为 ALTER。 审核员是 ALTER、-k/3、小邪今天死了没 。
 # 有用的文件
 |路径|用途|
+|---|---|
 |./Others/Find-Strings.py|查找某个字段在指定路径下的所有文件内，哪些文件有这个字段。|  
-$To be updated.$
+$To$ $be$ $updated.$
 # 当前禁卡表
 ### Forbidden
 + 圣光战士
