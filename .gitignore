@@ -2,6 +2,8 @@
 /cache
 /.vs
 /.idea
+/Others/Ban-list(ALTER-Format)-To-Ban-list(Simple-Format).py
+/Others/Ban-list(SImple-Format)-To-Ban-list(Markdown-Format).py
 /Others/Modules.py
 /Others/__pycache__
 /venv
