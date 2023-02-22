@@ -24,7 +24,7 @@ function cm.initial_effect(c)
     c:RegisterEffect(e2)
 end
 function cm.spfilter(c,tp)
-    return (c:IsFaceup() or (c:IsLocation(LOCATION_GRAVE) and not c:IsHasEffect(EFFECT_NECRO_VALLEY))) and c:IsType(TYPE_MONSTER) and c:CheckUniqueOnField(tp) and not c:IsForbidden() and c:IsLevel(9)
+    return (c:IsFaceup() or (c:IsLocation(LOCATION_GRAVE) and not c:IsHasEffect(EFFECT_NECRO_VALLEY))) and c:IsType(TYPE_MONSTER) and c:CheckUniqueOnField(tp) and not c:IsForbidden() and c:IsSetCard(0x891)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsControler(tp) and cm.spfilter(chkc) end
