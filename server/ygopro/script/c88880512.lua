@@ -59,8 +59,19 @@ function c88880512.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler() 
 	local g=Duel.GetMatchingGroup(c88880512.spfil,tp,LOCATION_DECK,0,nil,e,tp,eg) 
 	if g:GetCount()>0 then 
-		local sg=g:Select(tp,1,1,nil) 
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+		local sc=g:Select(tp,1,1,nil):GetFirst()  
+		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		sc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		sc:RegisterEffect(e2)
 	end 
 end 
 

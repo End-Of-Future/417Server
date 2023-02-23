@@ -10,12 +10,8 @@ function FK.A(c,code,cat,tg,op)
 	return e1,e2
 end
 function FK.RH(e,tp,eg,ep,ev,re,r,rp)
-	if not (fucg.gf.GGF(tp,"G",0,FK.RH_f,nil,nil,1) and Duel.SelectYesNo(tp,aux.Stringid(20000002,0))) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(FK.RH_f),tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
-	if not tc then return end
-	Duel.BreakEffect()
-	Duel.SendtoHand(tc,nil,REASON_EFFECT)
+	local res={RESET_PHASE+PHASE_STANDBY,Duel.GetCurrentPhase()<=PHASE_STANDBY and 2 or 1}
+	fucg.ef.FC(e,0,EVENT_PHASE+PHASE_STANDBY,nil,nil,1,FK.RH_con,FK.RH_op,tp,res,Duel.GetTurnCount())
 end
 function FK.A_con1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,20000002)>0
@@ -40,6 +36,15 @@ function FK.A_op2(e,tp,eg,ep,ev,re,r,rp)
 end
 function FK.RH_f(c)
 	return c:IsType(TYPE_SPELL) and c:IsAbleToHand()
+end
+function FK.RH_con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnCount()~=e:GetLabel() and fucg.gf.GGF(tp,"G",0,FK.RH_f,nil,1)
+end
+function FK.RH_op(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,e:GetHandler():GetCode())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local tc=fucg.gf.GGF(tp,"G",0,aux.NecroValleyFilter(FK.RH_conf)):Select(tp,1,1,nil):GetFirst()
+	if tc then Duel.SendtoHand(tc,nil,REASON_EFFECT) end
 end
 if not cm then return end
 --------------------------------------------------------

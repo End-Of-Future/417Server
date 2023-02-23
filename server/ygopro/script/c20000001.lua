@@ -19,9 +19,10 @@ function cm.con1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)==0
 end
 function cm.cosf1(c,e,tp,eg,ep,ev,re,r,rp)
-	local ck=c:CheckActivateEffect(true,true,false)
-	if not (c:IsType(TYPE_SPELL) and c:IsDiscardable() and ck and ck:IsHasProperty(16) and ck:GetOperation()) then return false end
-	return ck:GetTarget() and ck:GetTarget()(e,tp,eg,ep,ev,re,r,rp,0)
+	local te=c:CheckActivateEffect(true,true,false)
+	if not (c:IsType(TYPE_SPELL) and c:IsDiscardable() and te and te:IsHasProperty(16) and te:GetOperation()) then return false end
+	Debug.Message(te:GetCode())
+	return te:GetTarget() and te:GetTarget()(e,tp,eg,ep,ev,re,r,rp,0)
 end
 function cm.cos1(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)

@@ -62,8 +62,11 @@ function c88880540.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ec and ec:GetBattleTarget()~=nil 
 end
 function c88880540.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler() 
+	local ec=c:GetEquipTarget() 
+	local bc=ec:GetBattleTarget()
 	if chk==0 then return true end 
-	e:SetLabelObject()
+	e:SetLabelObject(bc) 
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetLabelObject(),1,0,0)
 end
 function c88880540.desop(e,tp,eg,ep,ev,re,r,rp)

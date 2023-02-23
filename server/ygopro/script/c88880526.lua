@@ -51,7 +51,7 @@ function c88880526.thop(e,tp,eg,ep,ev,re,r,rp)
 end 
 function c88880526.xthcost(e,tp,eg,ep,ev,re,r,rp,chk) 
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end 
-	local x=e:GetHandler():CheckRemoveOverlayCard(tp,1,2,REASON_COST) 
+	local x=e:GetHandler():RemoveOverlayCard(tp,1,2,REASON_COST) 
 	e:SetLabel(x)  
 end 
 function c88880526.xthfil(c) 

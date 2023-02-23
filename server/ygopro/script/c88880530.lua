@@ -94,7 +94,7 @@ function c88880530.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a,b=Duel.GetBattleMonster(tp)
 	if a and a:IsSetCard(0xd88) and b then
-		tc:RegisterFlagEffect(88880530,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		b:RegisterFlagEffect(88880530,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function c88880530.distg(e,c)
