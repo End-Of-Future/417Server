@@ -1,15 +1,16 @@
 # Func-Document
 你可以在这里查询到由 -k/3 整合的所有（共计736个）函数的信息。  
 只有满足以下条件的函数被统计：
++ 函数名带有至少 $1$ 个大写字母(ABCDEFGHIJKLMNOPRRSTUVWXYZ)且不含有数字($0123456789$)。
 + 使用 `.` 调用。即形如 `<something>.<function_name>(<something>`
-+ 使用 `:` 调用。即形如 `<something>:<function_name>(<something>`
++ 或使用 `:` 调用。即形如 `<something>:<function_name>(<something>`  
 
 # 辅助脚本
 该文件夹下的 `Functions-list.py` 和 `Find-String.py`。
 
 # 类简介
 ## Card
-该类表示1张卡。
+该类表示 $1$ 张卡。
 ### 获取类的实例
 该类不存在构造函数。一般地，不能创造新的实例。常见的获取实例的方法是调用任意一个返回 `Card` 的函数。
 ## Effect
@@ -17,34 +18,13 @@
 ### 获取类的实例
 该类不存在构造函数。常见的获取实例的方法是调用 `Effect.CreateEffect` 函数，或是任意一个返回 `Effect` 的函数。
 ## Group
-该类表示1个卡片组。
+该类表示 $1$ 个卡片组。 $1$ 个卡片组里有数张卡片（卡片张数 $∈ [0,∞) ∩ \N$）。
 ### 获取类的实例
 该类不存在构造函数。常见的获取实例的方法是调用 `Group.CreateGroup` 或 `Group` 类下任意一个函数首字母为 `_` 的函数，或是任意一个返回 `Group` 的函数。
-### 实例的特征
-每个实例实际上是数个卡片组成的。
-#### 互异性
+### 互异性
 同一张卡片在同一个实例内只能出现 $1$ 次。
-#### 有序性
+### 有序性
 同一个实例内的所有卡片的相对顺序不可更改。
-### 特别的表示方法
-为书写方便，在文档中定义一些特殊的表示方法。
-#### $∀_c$ in x
-表示对于x中的每一张卡。  
-特别地，当a是 $∅$ 时，不表示任何卡。
-#### $-$
-a $-$ b 表示：$∀_c$ in a，如果 c $∈$ b，则从a中删除c。
-#### $∈$
-x $∈$ g 表示x在g中。
-#### $∉$
-x $∉$ g 表示x不在g中。
-#### $∩$
-a $∩$ b 表示在a**并**在b中存在的卡组成的 `Group`。
-#### $∪$
-a $∪$ b 表示在a**或**在b中存在的卡组成的 `Group`。
-#### $∅$
-当g中没有卡时，称g是 $∅$。
-#### xor
-a xor b 返回 (a $∪$ b) $-$ (a $∩$ b)。
 
 # 函数列表
 根据函数名的首字母分类。不根据函数的父类分类。  
@@ -97,7 +77,7 @@ function Auxiliary.AddCodeList(c,...)
 `nil`。
 #### 用途
 使c变成有传入所有参数卡号的记述的卡。
-### AddContactFusionProcedure
+### aux.AddContactFusionProcedure
 #### 声明语句(Lua)
 ```lua
 function Auxiliary.AddContactFusionProcedure(c,filter,self_location,opponent_location,mat_operation,...)
@@ -346,12 +326,121 @@ void Card.AddMonsterAttribute(Card c, int type, int attribute, int race, int lev
 参数 `level` $\neq 0$。  
 若在数据库中有记录的数值，那些视为原本数值
 
-AddRitualProcEqual
-AddRitualProcEqualCode
-AddRitualProcGreater
-AddRitualProcGreaterCode
-AddRitualProcUltimate
-AddSetNameMonsterList
+### aux.AddRitualProcEqual
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddRitualProcEqual(c,filter,summon_location,grave_filter,mat_filter,pause,extra_operation,extra_target)
+```
+#### 接受参数
+按照顺序：一个 `Card`，一个 `function`，一个表示位置的 `number`，两个 `function`，一个 `boolean`，两个 `function`。  
+参数 `filter` 是仪式怪兽满足的条件。  
+参数 `summon_location` 表示从哪里仪式召唤，默认值是常量 `LOCATION_HAND`。  
+参数 `grave_filter` 是作为解放代替除外墓地的仪式素材需要满足的条件。  
+参数 `mat_filter` 是仪式素材满足的条件。  
+如果  `not pause` 为 `true`，则给 `c` 注册这个效果。  
+参数 `extra_operation` 是仪式召唤完成后进行的操作。  
+参数 `extra_target` 在效果的 `Target` 函数里被调用，参数为 `e,tp,eg,ep,ev,re,r,rp`。
+#### 返回值
+一个 `Effect`，可以让参数 `c` 仪式召唤。
+#### 用途
+为c添加仪式召唤手续：仪式素材的等级和 $=$ c的等级。
+
+### aux.AddRitualProcEqualCode
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddRitualProcEqualCode(c,code1,summon_location,grave_filter,mat_filter,pause,extra_operation,extra_target)
+```
+#### 接受参数
+按照顺序：一个 `Card`，一个 `number`，一个表示位置的 `number`，两个 `function`，一个 `boolean`，两个 `function`。  
+参数 `number` 是仪式怪兽的卡号。  
+参数 `summon_location` 表示从哪里仪式召唤，默认值是常量 `LOCATION_HAND`。  
+参数 `grave_filter` 是作为解放代替除外墓地的仪式素材需要满足的条件。  
+参数 `mat_filter` 是仪式素材满足的条件。  
+如果  `not pause` 为 `true`，则给 `c` 注册这个效果。  
+参数 `extra_operation` 是仪式召唤完成后进行的操作。  
+参数 `extra_target` 在效果的 `Target` 函数里被调用，参数为 `e,tp,eg,ep,ev,re,r,rp`。
+#### 返回值
+一个 `Effect`，可以让参数 `c` 仪式召唤。
+#### 用途
+为c添加仪式召唤手续：仪式素材的等级和 $=$ c的等级。  
+再让c成为有 `code1` 卡号记述的卡。
+
+### aux.AddRitualProcGreater
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddRitualProcGreater(c,filter,summon_location,grave_filter,mat_filter,pause,extra_operation,extra_target)
+```
+#### 接受参数
+按照顺序：一个 `Card`，一个 `function`，一个表示位置的 `number`，两个 `function`，一个 `boolean`，两个 `function`。  
+参数 `filter` 是仪式怪兽满足的条件。  
+参数 `summon_location` 表示从哪里仪式召唤，默认值是常量 `LOCATION_HAND`。  
+参数 `grave_filter` 是作为解放代替除外墓地的仪式素材需要满足的条件。  
+参数 `mat_filter` 是仪式素材满足的条件。  
+如果  `not pause` 为 `true`，则给 `c` 注册这个效果。  
+参数 `extra_operation` 是仪式召唤完成后进行的操作。  
+参数 `extra_target` 在效果的 `Target` 函数里被调用，参数为 `e,tp,eg,ep,ev,re,r,rp`。
+#### 返回值
+一个 `Effect`，可以让参数 `c` 仪式召唤。
+#### 用途
+为c添加仪式召唤手续：仪式素材的等级和 $\ge$ c的等级。
+
+### aux.AddRitualProcGreaterCode
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddRitualProcGreaterCode(c,code1,summon_location,grave_filter,mat_filter,pause,extra_operation,extra_target)
+```
+#### 接受参数
+按照顺序：一个 `Card`，一个 `number`，一个表示位置的 `number`，两个 `function`，一个 `boolean`，两个 `function`。  
+参数 `number` 是仪式怪兽的卡号。  
+参数 `summon_location` 表示从哪里仪式召唤，默认值是常量 `LOCATION_HAND`。  
+参数 `grave_filter` 是作为解放代替除外墓地的仪式素材需要满足的条件。  
+参数 `mat_filter` 是仪式素材满足的条件。  
+如果  `not pause` 为 `true`，则给 `c` 注册这个效果。  
+参数 `extra_operation` 是仪式召唤完成后进行的操作。  
+参数 `extra_target` 在效果的 `Target` 函数里被调用，参数为 `e,tp,eg,ep,ev,re,r,rp`。
+#### 返回值
+一个 `Effect`，可以让参数 `c` 仪式召唤。
+#### 用途
+为c添加仪式召唤手续：仪式素材的等级和 $\ge$ c的等级。  
+再让c成为有 `code1` 卡号记述的卡。
+
+### aux.AddRitualProcUltimate
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddRitualProcUltimate(c,filter,level_function,greater_or_equal,summon_location,grave_filter,mat_filter,pause,extra_operation,extra_target)
+```
+#### 接受参数
+按照顺序：一个 `Card`，两个 `function`，一个 `string`，一个表示位置的 `number`，两个 `function`，一个 `boolean`，两个 `function`。  
+参数 `filter` 是仪式怪兽满足的条件。  
+参数 `level_function` 的返回值必须为 `number`，返回c的等级。  
+枚举 `greater_or_equal` 的值：  
+|值|意义|
+|--|--|
+|"Equal"|仪式素材的等级和 $=$ c的等级。|
+|其他|仪式素材的等级和 $\ge$ c的等级。|
+
+参数 `summon_location` 表示从哪里仪式召唤，默认值是常量 `LOCATION_HAND`。  
+参数 `grave_filter` 是作为解放代替除外墓地的仪式素材需要满足的条件。  
+参数 `mat_filter` 是仪式素材满足的条件。  
+如果  `not pause` 为 `true`，则给 `c` 注册这个效果。  
+参数 `extra_operation` 是仪式召唤完成后进行的操作。  
+参数 `extra_target` 在效果的 `Target` 函数里被调用，参数为 `e,tp,eg,ep,ev,re,r,rp`。
+#### 返回值
+一个 `Effect`，可以让参数 `c` 仪式召唤。
+
+### aux.AddSetNameMonsterList
+#### 声明语句(Lua)
+```lua
+function Auxiliary.AddSetNameMonsterList(c,...)
+```
+#### 接受参数
+一个 `Card`，数个 `number`。
+#### 返回值
+`nil`。
+#### 用途
+使c变成有传入所有参数卡的卡名记述的卡。  
+给出实例：为配合「打破命运」，有「命运英雄」怪兽的卡名记述的卡都调用该函数。
+
 AddSynchroMixProcedure
 AddSynchroProcedure
 AddThisCardInGraveAlreadyCheck
