@@ -44,6 +44,7 @@ local e2=Effect.CreateEffect(c)
 	c:RegisterEffect(e4)
 --spsummon
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(66060001,1))
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_FREE_CHAIN)
@@ -60,7 +61,8 @@ local e2=Effect.CreateEffect(c)
 	e6:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetRange(LOCATION_PZONE)
-	e6:SetCountLimit(1,66650001)
+	e6:SetCountLimit(1,66050001)
+	e6:SetCost(c66060001.hxjcost)
 	e6:SetTarget(c66060001.target1)
 	e6:SetOperation(c66060001.operation1)
 	c:RegisterEffect(e6)
@@ -73,6 +75,19 @@ local e7=Effect.CreateEffect(c)
 	e7:SetTarget(c66060001.tntg)
 	e7:SetOperation(c66060001.tnop)
 	c:RegisterEffect(e7)
+--move
+	local e8=Effect.CreateEffect(c)
+	e8:SetDescription(aux.Stringid(66060001,0))
+	e8:SetCategory(CATEGORY_DESTROY)
+	e8:SetType(EFFECT_TYPE_QUICK_O)
+	e8:SetCode(EVENT_FREE_CHAIN)
+	e8:SetRange(LOCATION_MZONE)
+	e8:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e8:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e8:SetCountLimit(1,66060030)
+	e8:SetTarget(c66060001.mvtg)
+	e8:SetOperation(c66060001.mvop)
+	c:RegisterEffect(e8)
 --cannot be material
 	local e10=Effect.CreateEffect(c)
 	e10:SetType(EFFECT_TYPE_SINGLE)
@@ -90,8 +105,44 @@ local e7=Effect.CreateEffect(c)
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
 end
+function c66060001.mvfilter(c,seq)
+	return (c:GetSequence()==0 or c:GetSequence()==4)
+end
+function c66060001.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_PZONE,LOCATION_PZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_PZONE,LOCATION_PZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,0)
+end
+function c66060001.mvop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	local ap=tc:GetControler()
+	if tc:IsRelateToEffect(e) then
+		local a=Duel.GetMatchingGroup(c66060001.mvfilter,ap,LOCATION_SZONE,0,nil)
+		if a:GetCount()>0 then
+		Duel.Destroy(a,REASON_EFFECT) end
+		if tc:IsLocation(LOCATION_ONFIELD) then return end
+		Duel.MoveToField(tc,tp,ap,LOCATION_PZONE,POS_FACEUP,true)
+	end
+end
+function c66060001.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060001.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060001.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
+end
 function c66060001.splimit(e,se,sp,st)
-	return se:GetHandler():IsSetCard(0x660)
+	return se:GetHandler():IsSetCard(0x660) and not se:IsActiveType(TYPE_PENDULUM)
 end
 function c66060001.sccon1(e)
 	return e:GetHandler()==Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,0) 
@@ -168,7 +219,7 @@ end
 function c66060001.tnop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)

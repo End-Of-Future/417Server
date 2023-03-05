@@ -62,7 +62,7 @@ local e2=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e6:SetCode(EVENT_DESTROYED)
 	e6:SetProperty(EFFECT_FLAG_DELAY)
-	e6:SetCountLimit(1,66650016)
+	e6:SetCountLimit(1,66050016)
 	e6:SetCondition(c66060016.pencon)
 	e6:SetTarget(c66060016.pentg)
 	e6:SetOperation(c66060016.penop)
@@ -72,7 +72,8 @@ local e2=Effect.CreateEffect(c)
 	e7:SetCategory(CATEGORY_DESTROY)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetRange(LOCATION_PZONE)
-	e7:SetCountLimit(1,66060016)
+	e7:SetCountLimit(1,66050012)
+	e7:SetCost(c66060016.hxjcost)
 	e7:SetTarget(c66060016.pentg1)
 	e7:SetOperation(c66060016.penop1)
 	c:RegisterEffect(e7)
@@ -93,12 +94,27 @@ local e2=Effect.CreateEffect(c)
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
 end
+function c66060016.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060016.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060016.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
+end
 function c66060016.splimit1(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x660)
 end
 function c66060016.splimit(e,se,sp,st)
-	return se:GetHandler():IsSetCard(0x660)
+	return se:GetHandler():IsSetCard(0x660) and not se:IsActiveType(TYPE_PENDULUM)
 end
 function c66060016.sccon1(e)
 	return e:GetHandler()==Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,0) 
@@ -111,9 +127,8 @@ function c66060016.descon(e,tp,eg,ep,ev,re,r,rp)
 function c66060016.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x660) and c:IsType(TYPE_PENDULUM)
 end
-function c66060016.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
-	if chk==0 then return true end
+function c66060016.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) and Duel.IsExistingTarget(c66060016.desfilter,tp,LOCATION_MZONE+LOCATION_PZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g1=Duel.SelectTarget(tp,c66060016.desfilter,tp,LOCATION_MZONE+LOCATION_PZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
@@ -123,14 +138,15 @@ function c66060016.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c66060016.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if Duel.Destroy(g,REASON_EFFECT)~=2 then
-		local g2=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)end
+	if g:GetCount()==2 then
+	Duel.Destroy(g,REASON_EFFECT) end
 end
 function c66060016.descon1(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp end
+	return Duel.GetTurnPlayer()==tp
+end
 function c66060016.destg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) end
-	if chk==0 then return Duel.IsExistingTarget(nill,tp,LOCATION_ONFIELD,0,1,nil)end
+	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nill,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)

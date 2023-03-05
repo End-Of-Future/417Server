@@ -31,17 +31,18 @@ local e3=Effect.CreateEffect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetTargetRange(1,0)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,c66050028)
 	e3:SetCondition(c66060017.sccon1)
 	e3:SetTarget(c66060017.target1)
 	e3:SetOperation(c66060017.activate1)
 	c:RegisterEffect(e3)
---spsummon
+--destory
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
-	e4:SetCountLimit(1,c66650017)
+	e4:SetCountLimit(1,c66050017)
+	e4:SetCost(c66060017.hxjcost)
 	e4:SetCondition(c66060017.sccon2)
 	e4:SetTarget(c66060017.target)
 	e4:SetOperation(c66060017.activate)
@@ -84,6 +85,21 @@ local e6=Effect.CreateEffect(c)
 	local e13=e10:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
+end
+function c66060017.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060017.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060017.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060017.splimit(e,c)
 	if not c then return false end
@@ -160,7 +176,7 @@ function c66060017.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SEARCH,nil,1,0,LOCATION_DECK)
 end
 function c66060017.filter3(c,e,tp)
-		return c:IsSetCard(0x660) and c:IsType(TYPE_PENDULUM+TYPE_SPELL+TYPE_FIELD) and c:IsAbleToHand()
+		return c:IsSetCard(0x660) and c:IsAbleToHand()
 end
 function c66060017.operation2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<=2 then return end
@@ -193,7 +209,7 @@ end
 function c66060017.tnop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)

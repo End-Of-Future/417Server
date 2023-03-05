@@ -42,18 +42,20 @@ local e2=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
-	e4:SetCondition(c66060020.sccon2)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetCountLimit(1,66650020)
+	e4:SetCost(c66060020.hxjcost)
+	e4:SetCondition(c66060020.sccon2)
+	e4:SetCountLimit(1,66050020)
 	e4:SetTarget(c66060020.thtg)
 	e4:SetOperation(c66060020.thop)
 	c:RegisterEffect(e4)
 local e5=Effect.CreateEffect(c)
-	e5:SetCategory(CATEGORY_CONTROL)
+	e5:SetCategory(CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetRange(LOCATION_PZONE)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
-	e5:SetCountLimit(1,66650019)
+	e5:SetCountLimit(1,66050019)
+	e5:SetCost(c66060020.hxjcost)
 	e5:SetCondition(c66060020.sccon3)
 	e5:SetTarget(c66060020.thtg1)
 	e5:SetOperation(c66060020.thop1)
@@ -74,6 +76,21 @@ local e5=Effect.CreateEffect(c)
 	local e13=e10:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
+end
+function c66060020.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060020.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060020.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060020.splimit(e,c)
 	if not c then return false end
@@ -117,10 +134,10 @@ function c66060020.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c66060020.thop(e,tp,eg,ep,ev,re,r,rp)
-	local tc1=Duel.GetFirstTarget()
-	if tc1:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc1,nill,REASON_EFFECT)
-		Duel.SendtoHand(e:GetHandler(),nill,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
 	end
 end
 function c66060020.thtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -131,8 +148,9 @@ function c66060020.thtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c66060020.thop1(e,tp,eg,ep,ev,re,r,rp)
-	local tc2=Duel.GetFirstTarget()
-	if tc2:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc2,nill,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if not tc then return end
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nill,REASON_EFFECT)
 	end
 end

@@ -24,7 +24,8 @@ function c66060026.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c66060026.ctcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x660) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and not re:GetHandler():IsType(TYPE_CONTINUOUS) and not re:GetHandler():IsType(TYPE_SPELL)
+	local rc=re:GetHandler()
+	return re and rc:IsSetCard(0x660) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:GetOriginalType()&TYPE_MONSTER~=0
 end
 function c66060026.ctop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x660,1)

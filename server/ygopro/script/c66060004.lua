@@ -28,7 +28,8 @@ local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_PZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,66050006)
+	e3:SetCost(c66060004.hxjcost)
 	e3:SetCondition(c66060004.sccon2)
 	e3:SetTarget(c66060004.cttg)
 	e3:SetOperation(c66060004.ctop)
@@ -39,6 +40,7 @@ local e4=Effect.CreateEffect(c)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetCountLimit(1)
+	e4:SetCost(c66060004.hxjcost)
 	e4:SetCondition(c66060004.sccon3)
 	e4:SetTarget(c66060004.cttg1)
 	e4:SetOperation(c66060004.ctop1)
@@ -72,6 +74,21 @@ local e6=e5:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
 end
+function c66060004.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060004.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060004.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
+end
 function c66060004.splimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x660)
@@ -93,10 +110,12 @@ function c66060004.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,c66060004.filter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c66060004.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if not tc then return end
+	if tc:IsRelateToEffect(e) and Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
 		Duel.GetControl(tc,tp,PHASE_STANDBY,1)
 	end
 end

@@ -41,6 +41,7 @@ local e2=Effect.CreateEffect(c)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_NO_TURN_RESET)
 	e4:SetCountLimit(1)
+	e4:SetCost(c66060008.hxjcost)
 	e4:SetCondition(c66060008.sccon3)
 	e4:SetTarget(c66060008.eqtg1)
 	e4:SetOperation(c66060008.eqop1)
@@ -52,6 +53,7 @@ local e2=Effect.CreateEffect(c)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_NO_TURN_RESET)
 	e5:SetCountLimit(1)
+	e5:SetCost(c66060008.hxjcost)
 	e5:SetCondition(c66060008.sccon4)
 	e5:SetTarget(c66060008.eqtg)
 	e5:SetOperation(c66060008.eqop)
@@ -61,7 +63,7 @@ local e2=Effect.CreateEffect(c)
 	e6:SetCategory(CATEGORY_DESTROY)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetRange(LOCATION_MZONE)
-	e6:SetCountLimit(1,66650008)
+	e6:SetCountLimit(1,66050008)
 	e6:SetCondition(c66060008.dscon)
 	e6:SetTarget(c66060008.dstg)
 	e6:SetOperation(c66060008.dsop)
@@ -82,6 +84,21 @@ local e2=Effect.CreateEffect(c)
 	local e13=e10:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
+end
+function c66060008.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060008.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060008.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060008.sccon1(e)
 	return e:GetHandler()==Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,0) 
@@ -109,6 +126,7 @@ function c66060008.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	if c:IsLocation(LOCATION_MZONE) and c:IsFacedown() then return end
 	local tc=Duel.GetFirstTarget()
+	if not tc then return end
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or not c:CheckUniqueOnField(tp) then
 		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 		return

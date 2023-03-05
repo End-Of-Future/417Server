@@ -27,12 +27,11 @@ local e2=Effect.CreateEffect(c)
 --p
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_POSITION)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(TIMING_BATTLE_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_PHASE)
+	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_PZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,66050018)
 	e3:SetCondition(c66060018.sccon1)
+	e3:SetCost(c66060018.hxjcost)
 	e3:SetTarget(c66060018.postg)
 	e3:SetOperation(c66060018.posop)
 	c:RegisterEffect(e3)
@@ -106,17 +105,43 @@ function c66060018.sccon2(e)
 	return e:GetHandler()==Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1) 
 end
 function c66060018.posfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsFaceup() and c:IsCanChangePosition()
+	return c:IsType(TYPE_PENDULUM) and c:IsFaceup()
+end
+function c66060018.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
+	if a:GetCount()==0 then return end
+	if chk==0 then return a:IsExists(c66060018.posfilter,1,nil) end
+	Duel.SendtoExtraP(a,nil,REASON_COST)
+end
+function c66060018.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060018.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060018.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060018.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66060018.posfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,tp,LOCATION_MZONE)
+	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
+	if a:GetCount()==0 then return end
+	local c=e:GetHandler()
+	if chk==0 then return a:IsExists(c66060018.posfilter,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c66060018.posop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-	local tc1=Duel.SelectMatchingCard(tp,c66060018.posfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
-	if tc1 then
-		Duel.ChangePosition(tc1,POS_FACEDOWN_DEFENSE)
+	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
+	if a:GetCount()==0 then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SendtoExtraP(a,nil,REASON_EFFECT)~=0 then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c66060018.grave(e,tp,eg,ep,ev,re,r,rp,chk)

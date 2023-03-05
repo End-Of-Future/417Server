@@ -29,6 +29,7 @@ local e2=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1,66060005)
+	e3:SetCost(c66060005.hxjcost)
 	e3:SetTarget(c66060005.stg)
 	e3:SetOperation(c66060005.sop)
 	c:RegisterEffect(e3)
@@ -36,7 +37,7 @@ local e2=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_LEAVE_GRAVE)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_EXTRA)
-	e4:SetCountLimit(1,66650005)
+	e4:SetCountLimit(1,66050005)
 	e4:SetCondition(c66060005.setcon)
 	e4:SetTarget(c66060005.settg)
 	e4:SetOperation(c66060005.setop)
@@ -67,6 +68,21 @@ local e2=Effect.CreateEffect(c)
 	local e13=e10:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
+end
+function c66060005.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060005.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060005.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060005.splimit(e,c)
 	if not c then return false end
@@ -100,7 +116,7 @@ end
 function c66060005.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsFaceup() end
 function c66060005.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66060005.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66060005.setfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.GetLocationCount(tp,LOCATION_SZONE-LOCATION_FZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nill,1,tp,0)
 end
 function c66060005.setop(e,tp,eg,ep,ev,re,r,rp)

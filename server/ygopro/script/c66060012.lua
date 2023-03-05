@@ -40,6 +40,7 @@ local e4=Effect.CreateEffect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_PZONE)
+	e4:SetCost(c66060012.hxjcost)
 	e4:SetCondition(c66060012.sccon1)
 	e4:SetTarget(c66060012.destg)
 	e4:SetOperation(c66060012.desop)
@@ -79,6 +80,21 @@ local e6=e5:Clone()
 	local e13=e10:Clone()
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
+end
+function c66060012.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c66060012.hxjlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp) end
+end
+function c66060012.hxjlimit(e,c)
+	return not c:IsSetCard(0x660)
 end
 function c66060012.splimit(e,c)
 	if not c then return false end
