@@ -32,7 +32,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.getcard(p,seq)
-    local tc=Duel.GetFieldGroup(tp,LOCATION_MZONE,0):Filter(function (c)
+    local tc=Duel.GetFieldGroup(p,LOCATION_MZONE,0):Filter(function (c)
         return c:GetSequence()==seq
     end,nil)
     if tc:GetCount()==0 then return nil
