@@ -60,7 +60,7 @@ function cm.orufilter0(tc,seq,tp,...)
 end
 function cm.orufilter1(c,tp)
     local v=aux.GetColumn(c,tp)
-    return (not(v==0 or v==4))--self
+    return (not(v==0 or v==4) and cm.orufilter0(c))--self
     and (cm.orufilter0(Duel.GetFieldCard(tp,LOCATION_MZONE,v-1)))--left
     and (cm.orufilter0(Duel.GetFieldCard(tp,LOCATION_MZONE,v+1)))--right
 end
@@ -118,13 +118,14 @@ function cm.xop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
     if cm.CheckLocation(tp,LOCATION_MZONE,1,mg) and cm.CheckLocation(tp,LOCATION_MZONE,3,mg) then zone=zone+4 end
     if cm.CheckLocation(tp,LOCATION_MZONE,2,mg) and cm.CheckLocation(tp,LOCATION_MZONE,4,mg) then zone=zone+8 end
     --self spsummon
-    Duel.SpecialSummon(c,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP,zone)
-    zone=aux.GetColumn(c,tp)
+    Duel.SpecialSummonStep(c,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP,zone)
+    zone=c:GetSequence()
     --other spsummon
     local tc1=Duel.SelectMatchingCard(tp,cm.xfilter1,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil,e,tp)
-    Duel.SpecialSummon(tc1,SUMMON_TYPE_SPECIAL,tp,tp,true,true,POS_FACEUP,(1<<zone)/2)
+    Duel.SpecialSummonStep(tc1,SUMMON_TYPE_SPECIAL,tp,tp,true,true,POS_FACEUP,(1<<zone)/2)
     local tc2=Duel.SelectMatchingCard(tp,cm.xfilter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil,e,tp)
-    Duel.SpecialSummon(tc2,SUMMON_TYPE_SPECIAL,tp,tp,true,true,POS_FACEUP,(1<<zone)*2)
+    Duel.SpecialSummonStep(tc2,SUMMON_TYPE_SPECIAL,tp,tp,true,true,POS_FACEUP,(1<<zone)*2)
+    Duel.SpecialSummonComplete()
     mg:DeleteGroup()
 end
 function cm.spfilter(c,e,tp)
