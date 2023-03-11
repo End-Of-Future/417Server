@@ -26,7 +26,7 @@ local e2=Effect.CreateEffect(c)
 	c:RegisterEffect(e9)
 --p
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_POSITION)
+	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1,66050018)
@@ -104,15 +104,6 @@ end
 function c66060018.sccon2(e)
 	return e:GetHandler()==Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1) 
 end
-function c66060018.posfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsFaceup()
-end
-function c66060018.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
-	if a:GetCount()==0 then return end
-	if chk==0 then return a:IsExists(c66060018.posfilter,1,nil) end
-	Duel.SendtoExtraP(a,nil,REASON_COST)
-end
 function c66060018.hxjcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	if e:GetHandler():GetControler()==e:GetHandler():GetOwner() then
@@ -130,17 +121,17 @@ function c66060018.hxjlimit(e,c)
 end
 function c66060018.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
-	if a:GetCount()==0 then return end
+	if not a then return end
 	local c=e:GetHandler()
-	if chk==0 then return a:IsExists(c66060018.posfilter,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c66060018.posop(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
-	if a:GetCount()==0 then return end
+	if not a then return end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SendtoExtraP(a,nil,REASON_EFFECT)~=0 then
+	if c:IsRelateToEffect(e) and Duel.Destroy(a,REASON_EFFECT)~=0 then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end
 end

@@ -48,7 +48,7 @@ function c66060011.initial_effect(c)
 	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e13)
 end
-function c66060014.splimit(e,c)
+function c66060011.splimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x660)
 end

@@ -123,6 +123,7 @@ function c66060001.mvop(e,tp,eg,ep,ev,re,r,rp)
 		if a:GetCount()>0 then
 		Duel.Destroy(a,REASON_EFFECT) end
 		if tc:IsLocation(LOCATION_ONFIELD) then return end
+		if not tc:IsType(TYPE_PENDULUM) then return end
 		Duel.MoveToField(tc,tp,ap,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
@@ -231,3 +232,4 @@ function c66060001.splimit1(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x660)
 end
+
